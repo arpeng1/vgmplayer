@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import AersiaServices from './services/AersiaServices';
+// import SongRow from './components/SongRow';
+import SongTable from './components/SongTable';
 
 const parser = require('fast-xml-parser');
 
@@ -48,7 +50,7 @@ function App() {
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
         {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>
-      {songs.map(song => <div key={song.location}>{song.creator} - {song.title}</div>)}
+      <SongTable songs={songs}/>
     </div>
   );
 }
