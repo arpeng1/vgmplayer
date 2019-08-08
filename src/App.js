@@ -46,16 +46,16 @@ function App() {
     <div>
       <p>playlist selected {playlist}</p>
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
-        {playlistOptions.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
+        {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>
-      {songs.map(song => <div>{song.title}</div>)}
+      {songs.map(song => <div key={song.location}>{song.creator} - {song.title}</div>)}
     </div>
   );
 }
 
 export default App;
 
-const playlistOptions = [
+const PLAYLIST_OPTIONS = [
   'VIP',
   'mellow',
   'source',
@@ -63,3 +63,5 @@ const playlistOptions = [
   'WAP',
   'CPP'
 ]
+
+const DEFAULT_PLAYLIST = 'VIP'
