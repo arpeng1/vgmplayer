@@ -21,13 +21,14 @@ function App() {
       .then(playlist => {
         if (!playlist || parser.validate(playlist)) {
           const jsonObj = parser.parse(playlist);
-          console.log(jsonObj, jsonObj.playlist.trackList.track);
-          setSongs(jsonObj.playlist.trackList.track);
+          setSongs(cleanTracklist(jsonObj.playlist.trackList.track));
+          // setSongs(jsonObj.playlist.trackList.track);
         } else {
           console.log('error, invalid playlist xml format', playlist);;
           throw new Error('invalid playlist');
         }
       })    
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);
 
 
@@ -39,7 +40,8 @@ function App() {
       const response = await AersiaServices.getPlaylist(name);
       if (!response || parser.validate(response)) {
         const jsonObj = parser.parse(response);
-        setSongs(jsonObj.playlist.trackList.track);
+        setSongs(cleanTracklist(jsonObj.playlist.trackList.track));
+        // setSongs(jsonObj.playlist.trackList.track);
       } else {
         throw new Error('invalid playlist xml format');
       }
@@ -47,6 +49,27 @@ function App() {
         console.log(exception);
     }
 
+  }
+
+  // ensures uniqueness
+  function cleanTracklist(tracks) {
+    let songMap = new Map(); // used to ensure uniqueness
+    const trackArrays = [];
+    tracks.forEach(track => {
+      let id = `${track.title}-${track.creator}`;
+      if (!songMap.has(id)) {
+        songMap.set(id, track);
+        trackArrays.push(track);
+      }
+    })
+    songMap = null;
+    return trackArrays;
+  }
+
+
+  function selectSong(songID) {
+    setSelectedSong(songID);
+    
   }
 
   function handlePlayPause() {
@@ -72,6 +95,7 @@ function App() {
   return (
     <div>
       <p>playlist selected {playlist}</p>
+      <p>Song selected {selectedSong}</p>
       {play === false ? 
         <ControlButton msg='play' click={() => handlePlayPause()} /> 
         : <ControlButton msg='pause' click={() => handlePlayPause()} />}
@@ -82,7 +106,7 @@ function App() {
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
         {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>
-      <SongTable songs={songs}/>
+      <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong}/>
     </div>
   );
 }
