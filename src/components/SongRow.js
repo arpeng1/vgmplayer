@@ -2,7 +2,7 @@ import React from 'react';
 
 let classNames = require('classnames');
 
-function SongRow({creator, title, index, selectSong, className}) {
+function SongRow({song, index, selectSong, className}) {
   const rowClicked = {
     border: 'solid',
     borderWidth: 1,
@@ -14,10 +14,10 @@ function SongRow({creator, title, index, selectSong, className}) {
   // })
   return (
     <tr 
-      onClick={() => selectSong(`${creator}-${title}`)} 
+      onClick={() => selectSong(song)} 
       className={className}
       >
-      <td>{index} {creator} - {title}</td>
+      <td>{index} {song.creator} - {song.title}</td>
     </tr>
   )
 
