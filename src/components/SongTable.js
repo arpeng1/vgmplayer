@@ -5,12 +5,11 @@ let classNames = require('classnames');
 
 function SongTable({songs, selectSong, selectedSong = false}) {
 
-  console.log(selectedSong);
-  const rowClicked = {
-    border: 'solid',
-    borderWidth: 1,
-    backgroundColor: 'red'
-  };
+  // const rowClicked = {
+  //   border: 'solid',
+  //   borderWidth: 1,
+  //   backgroundColor: 'red'
+  // };
 
   const songRowClass = classNames({
     'rowClicked': true

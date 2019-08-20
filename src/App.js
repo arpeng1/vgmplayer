@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import AersiaServices from './services/AersiaServices';
 import SongTable from './components/SongTable';
 import ControlButton from './components/ControlButton';
+import ProgressBar from './components/ProgressBar';
 
 const parser = require('fast-xml-parser');
 
@@ -12,11 +13,13 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
+  const [progressBarWidth, setProgressBarWidth] = useState(0);
 
   const [play, setPlay] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [previousSongs, setPreviousSongs] = useState([]);
 
+  // on initial load, grabs playlists
   useEffect((() => {
     AersiaServices
       .getPlaylist('VIP')
@@ -33,6 +36,28 @@ function App() {
       })    
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);
+
+  // on song end, load the next song randomly or next in position
+  // doesn't work :(
+  // useEffect(() => {
+  //   const c = player.current;
+  //   c.addEventListener('ended', () => {
+  //     console.log('song completed');
+  //     // debugger;
+  //     // const randomPos = randomSongPosition();
+  //     // const randomSong = songs[randomPos];
+  //     // console.log(randomSong, randomPos, songs);
+  //     // setPreviousSongs(previousSongs.concat(selectedSong));
+  //     // setSelectedSong(randomSong);
+  //     // player.current.src = randomSong.location;
+  //     // player.current.play();
+  //     // setPlay(true);
+
+  //     // selectSong(randomSong);
+  //   })
+  //   return () => c.removeEventListener('ended', () => {})
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [songs, previousSongs])
 
 
   async function getPlaylist (event) {
@@ -81,6 +106,7 @@ function App() {
       setPreviousSongs(previousSongs.concat(selectedSong));
       setSelectedSong(song);
     }
+    console.log('select song: ', song);
     player.current.src = song.location;
     player.current.play();
     setPlay(true);
@@ -98,6 +124,11 @@ function App() {
       player.current.play();
       setPlay(true);
     }
+  }
+
+  function handleTimeUpdate() {
+    setProgressBarWidth(
+      Math.floor((player.current.currentTime / player.current.duration) * 100) + '%');
   }
 
   function getPreviousSong() {
@@ -145,11 +176,16 @@ function App() {
         <ControlButton msg='shuffle' click={() => handleShuffle()} />
       }
       <ControlButton msg='volume' click={() => handleVolume()} />
+      <ProgressBar progressPercent={progressBarWidth} />
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
         {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>
       <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong}/>
-      <audio ref={player} />
+      <audio 
+      ref={player}
+      onTimeUpdate={() => handleTimeUpdate()}
+      ended={() => getNextSong()} 
+      />
     </div>
   );
 }
