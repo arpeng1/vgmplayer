@@ -22,7 +22,12 @@ function ProgressBar({progressPercent}) {
   const point = {
     position: 'absolute',
     left : `${progressPercent}`,
-    top: '50%'
+    top: '50%',
+    bottom: '10px',
+    height: '8px',
+    width: '8px',
+    background: 'black',
+    transform: `translate(-50%, -50%)`
   }
 
   return (
