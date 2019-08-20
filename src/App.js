@@ -184,7 +184,7 @@ function App() {
       <audio 
       ref={player}
       onTimeUpdate={() => handleTimeUpdate()}
-      ended={() => getNextSong()} 
+      onEnded={() => getNextSong()} 
       />
     </div>
   );
