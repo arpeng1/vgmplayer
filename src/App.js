@@ -9,6 +9,8 @@ const parser = require('fast-xml-parser');
 function App() {
 
   const player = useRef();
+  const trackBar = useRef();
+  const point = useRef();
 
   const [songs, setSongs] = useState([]);
   const [playlist, setPlaylist] = useState('VIP');
@@ -155,6 +157,23 @@ function App() {
 
   }
 
+  function handleMouseMove(e) {
+    // console.log(e.nativeEvent.pageX, trackBar.current.offsetWidth, point.current.offsetWidth, trackBar.current.offsetLeft);
+    // let currentTime = ((e.nativeEvent.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
+    // player.current.currentTime = currentTime;
+    player.current.currentTime = ((e.nativeEvent.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
+  }
+
+  function handleMouseUp() {
+    window.removeEventListener('mousemove', handleMouseMove);
+    window.removeEventListener('mouseup', handleMouseUp);
+  }
+
+  function handleMouseDown(e) {
+    window.addEventListener('mousemove', handleMouseMove(e));
+    window.addEventListener('mouseup', handleMouseUp);
+  }
+
   return (
     <div>
       <p>playlist selected {playlist}</p>
@@ -166,17 +185,23 @@ function App() {
       }
       {/* {play ? <p>Playing song: {selectedSong}</p> : <p>Paused</p>}  */}
       {play ? 
-        <ControlButton msg='pause' click={() => handlePlayPause()} /> :
-        <ControlButton msg='play' click={() => handlePlayPause()} /> 
+        <ControlButton msg='pause' click={handlePlayPause} /> :
+        <ControlButton msg='play' click={handlePlayPause} /> 
       }
-      <ControlButton msg='prev' click={() => getPreviousSong()} />
-      <ControlButton msg='next' click={() => getNextSong()}/>
+      <ControlButton msg='prev' click={getPreviousSong} />
+      <ControlButton msg='next' click={getNextSong}/>
       {shuffle ? 
-        <ControlButton msg='linear' click={() => handleShuffle()} /> :
-        <ControlButton msg='shuffle' click={() => handleShuffle()} />
+        <ControlButton msg='linear' click={handleShuffle} /> :
+        <ControlButton msg='shuffle' click={handleShuffle} />
       }
-      <ControlButton msg='volume' click={() => handleVolume()} />
-      <ProgressBar progressPercent={progressBarWidth} />
+      <ControlButton msg='volume' click={handleVolume} />
+      <ProgressBar 
+        progressPercent={progressBarWidth} 
+        trackBarRef={trackBar} 
+        pointRef={point} 
+        mouseMove={handleMouseMove}
+        mouseDown={handleMouseDown}
+        />
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
         {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>

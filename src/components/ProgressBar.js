@@ -1,6 +1,6 @@
 import React from 'react';
 
-function ProgressBar({progressPercent}) {
+function ProgressBar({progressPercent, mouseMove, mouseDown, trackBarRef, pointRef}) {
 
   const track = {
     position: 'relative',
@@ -31,9 +31,9 @@ function ProgressBar({progressPercent}) {
   }
 
   return (
-    <div style={track}>
+    <div style={track} onClick={(e) => mouseMove(e)} ref={trackBarRef}>
       <div style={progress} />
-      <div style={point} />
+      <div style={point}  onMouseDown={(e) => mouseDown(e)} ref={pointRef} />
     </div>
   )
 }
