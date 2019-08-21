@@ -7,10 +7,12 @@ import ProgressBar from './components/ProgressBar';
 const parser = require('fast-xml-parser');
 
 function App() {
+  console.log('rendering')
 
   const player = useRef();
   const trackBar = useRef();
   const point = useRef();
+  const dragging = useRef();
 
   const [songs, setSongs] = useState([]);
   const [playlist, setPlaylist] = useState('VIP');
@@ -18,7 +20,7 @@ function App() {
   const [progressBarWidth, setProgressBarWidth] = useState(0);
 
   const [play, setPlay] = useState(false);
-  const [shuffle, setShuffle] = useState(false);
+  const [shuffle, setShuffle] = useState(true);
   const [previousSongs, setPreviousSongs] = useState([]);
 
   // on initial load, grabs playlists
@@ -129,8 +131,10 @@ function App() {
   }
 
   function handleTimeUpdate() {
-    setProgressBarWidth(
-      Math.floor((player.current.currentTime / player.current.duration) * 100) + '%');
+    if (!dragging.current) {
+      setProgressBarWidth(
+        Math.floor((player.current.currentTime / player.current.duration) * 100) + '%');
+    }
   }
 
   function getPreviousSong() {
@@ -157,21 +161,40 @@ function App() {
 
   }
 
-  function handleMouseMove(e) {
-    // console.log(e.nativeEvent.pageX, trackBar.current.offsetWidth, point.current.offsetWidth, trackBar.current.offsetLeft);
-    // let currentTime = ((e.nativeEvent.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
-    // player.current.currentTime = currentTime;
-    player.current.currentTime = ((e.nativeEvent.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
+  function handlePointPosition(position) {
+    let trackBarWidth = trackBar.current.offsetWidth - point.current.offsetWidth;
+    let handleLeft = position - trackBar.current.offsetLeft;
+    let pointPercent = (handleLeft / trackBarWidth) * 100;
+    setProgressBarWidth(pointPercent + '%');
+
+    console.log(handleLeft, trackBarWidth, (handleLeft / trackBarWidth) * 100);
+
   }
 
-  function handleMouseUp() {
+  function handleMouseMove(e) {
+    dragging.current = true;
+    handlePointPosition(e.pageX);
+  }
+
+  function handleMouseUp(e) {
+    dragging.current = false;
+    player.current.currentTime = ((e.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mouseup', handleMouseUp);
   }
 
   function handleMouseDown(e) {
-    window.addEventListener('mousemove', handleMouseMove(e));
+    handlePointPosition(e.pageX);
+    window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
+  }
+
+  if (songs.length === 0) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    )
   }
 
   return (
