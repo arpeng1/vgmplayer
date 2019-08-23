@@ -1,12 +1,13 @@
 import React from 'react';
 
-function ProgressBar({progressPercent, mouseMove, mouseDown, trackBarRef, pointRef}) {
+function ProgressBar({progressPercent, mouseDown, trackBarRef, pointRef}) {
 
   const track = {
     position: 'relative',
-    width: '100%',
+    width: '50%',
     height: '10px',
-    background: '#7f6157'
+    background: '#7f6157',
+    margin: '20px'
   }
 
   const progress = {

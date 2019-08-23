@@ -7,8 +7,6 @@ import ProgressBar from './components/ProgressBar';
 const parser = require('fast-xml-parser');
 
 function App() {
-  console.log('rendering')
-
   const player = useRef();
   const trackBar = useRef();
   const point = useRef();
@@ -40,29 +38,6 @@ function App() {
       })    
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);
-
-  // on song end, load the next song randomly or next in position
-  // doesn't work :(
-  // useEffect(() => {
-  //   const c = player.current;
-  //   c.addEventListener('ended', () => {
-  //     console.log('song completed');
-  //     // debugger;
-  //     // const randomPos = randomSongPosition();
-  //     // const randomSong = songs[randomPos];
-  //     // console.log(randomSong, randomPos, songs);
-  //     // setPreviousSongs(previousSongs.concat(selectedSong));
-  //     // setSelectedSong(randomSong);
-  //     // player.current.src = randomSong.location;
-  //     // player.current.play();
-  //     // setPlay(true);
-
-  //     // selectSong(randomSong);
-  //   })
-  //   return () => c.removeEventListener('ended', () => {})
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [songs, previousSongs])
-
 
   async function getPlaylist (event) {
     event.preventDefault();
@@ -132,8 +107,9 @@ function App() {
 
   function handleTimeUpdate() {
     if (!dragging.current) {
+      // console.log('updating width', player.current.currentTime / player.current.duration * 100)
       setProgressBarWidth(
-        Math.floor((player.current.currentTime / player.current.duration) * 100) + '%');
+        Math.round((player.current.currentTime / player.current.duration) * 100) + '%');
     }
   }
 
@@ -162,12 +138,21 @@ function App() {
   }
 
   function handlePointPosition(position) {
-    let trackBarWidth = trackBar.current.offsetWidth - point.current.offsetWidth;
+    // let trackBarWidth = trackBar.current.offsetWidth - point.current.offsetWidth;
+    let trackBarWidth = trackBar.current.offsetWidth;
     let handleLeft = position - trackBar.current.offsetLeft;
-    let pointPercent = (handleLeft / trackBarWidth) * 100;
-    setProgressBarWidth(pointPercent + '%');
+    let pointPercent = Math.floor((handleLeft / trackBarWidth) * 100);
 
-    console.log(handleLeft, trackBarWidth, (handleLeft / trackBarWidth) * 100);
+    if (handleLeft > 0 && handleLeft < trackBarWidth) {
+      setProgressBarWidth(pointPercent + '%');
+    } else if (handleLeft < 0) {
+      setProgressBarWidth('0%');
+    } else if (handleLeft > trackBarWidth) {
+      setProgressBarWidth('100%');
+    }
+    
+    // console.log('handle point position', pointPercent);
+    // console.log(handleLeft, trackBarWidth, point.current.offsetWidth, (handleLeft / trackBarWidth) * 100);
 
   }
 
@@ -177,13 +162,24 @@ function App() {
   }
 
   function handleMouseUp(e) {
+    // dragging.current = false;
+    // let trackBarWidth = trackBar.current.offsetWidth - point.current.offsetWidth;
+    let trackBarWidth = trackBar.current.offsetWidth;
+    let handleLeft = e.pageX - trackBar.current.offsetLeft;
+    let pointPercent = (handleLeft / trackBarWidth)
+    // console.log('mouse up', pointPercent)
+
+    if (selectedSong) {
+      player.current.currentTime = Math.floor(pointPercent * player.current.duration);
+      // player.current.currentTime = Math.floor(((e.pageX - trackBar.current.offsetLeft) / (trackBar.current.offsetWidth - point.current.offsetWidth)) * player.current.duration);
+    }
     dragging.current = false;
-    player.current.currentTime = ((e.pageX - trackBar.current.offsetLeft) / trackBar.current.offsetWidth) * player.current.duration;
     window.removeEventListener('mousemove', handleMouseMove);
     window.removeEventListener('mouseup', handleMouseUp);
   }
 
   function handleMouseDown(e) {
+    dragging.current = true;
     handlePointPosition(e.pageX);
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
@@ -222,7 +218,6 @@ function App() {
         progressPercent={progressBarWidth} 
         trackBarRef={trackBar} 
         pointRef={point} 
-        mouseMove={handleMouseMove}
         mouseDown={handleMouseDown}
         />
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
