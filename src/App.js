@@ -13,6 +13,8 @@ function App() {
   const dragging = useRef();
 
   const [songs, setSongs] = useState([]);
+  const [currentTrackMoment, setCurrentTrackMoment] = useState('00:00');
+  const [currentTrackDuration, setCurrentTrackDuration] = useState('00:00');
   const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
   const [progressBarWidth, setProgressBarWidth] = useState(0);
@@ -106,11 +108,21 @@ function App() {
   }
 
   function handleTimeUpdate() {
+    setCurrentTrackMoment(Math.floor(player.current.currentTime));
     if (!dragging.current) {
+      // console.log(player.current.currentTime);
       // console.log('updating width', player.current.currentTime / player.current.duration * 100)
+      // setProgressBarWidth(
+      //   (Math.floor(player.current.currentTime) / player.current.duration) * 100 + '%'
+      // );
       setProgressBarWidth(
-        Math.round((player.current.currentTime / player.current.duration) * 100) + '%');
+        ((player.current.currentTime / player.current.duration) * 100) + '%'
+        );
     }
+  }
+
+  function handleLoadedMetaData() {
+    setCurrentTrackDuration(handleSecondsToMinutes(Math.floor(player.current.duration)));
   }
 
   function getPreviousSong() {
@@ -137,11 +149,18 @@ function App() {
 
   }
 
+  function handleSecondsToMinutes(sec) {
+    if (sec === 0 || sec === null) return '00:00'
+    const minutes = Math.floor(sec / 60);
+    const seconds = sec - minutes * 60;
+    return `${minutes}:${seconds}`;
+  }
+
   function handlePointPosition(position) {
     // let trackBarWidth = trackBar.current.offsetWidth - point.current.offsetWidth;
     let trackBarWidth = trackBar.current.offsetWidth;
     let handleLeft = position - trackBar.current.offsetLeft;
-    let pointPercent = Math.floor((handleLeft / trackBarWidth) * 100);
+    let pointPercent = ((handleLeft / trackBarWidth) * 100);
 
     if (handleLeft > 0 && handleLeft < trackBarWidth) {
       setProgressBarWidth(pointPercent + '%');
@@ -170,7 +189,7 @@ function App() {
     // console.log('mouse up', pointPercent)
 
     if (selectedSong) {
-      player.current.currentTime = Math.floor(pointPercent * player.current.duration);
+      player.current.currentTime = (pointPercent * player.current.duration);
       // player.current.currentTime = Math.floor(((e.pageX - trackBar.current.offsetLeft) / (trackBar.current.offsetWidth - point.current.offsetWidth)) * player.current.duration);
     }
     dragging.current = false;
@@ -214,12 +233,19 @@ function App() {
         <ControlButton msg='shuffle' click={handleShuffle} />
       }
       <ControlButton msg='volume' click={handleVolume} />
+      {/* <p>
+      {player.current && player.current.currentTime ? handleSecondsToMinutes(Math.floor(player.current.currentTime)) : '00:00'}
+      </p> */}
+      <p>{currentTrackMoment}</p>
       <ProgressBar 
         progressPercent={progressBarWidth} 
         trackBarRef={trackBar} 
         pointRef={point} 
         mouseDown={handleMouseDown}
         />
+        <p>{currentTrackDuration}</p>
+        {/* <p>{player.current && player.current.duration ? handleSecondsToMinutes(Math.floor(player.current.duration - player.current.currentTime)) : '00:00'}</p> */}
+
       <select value={playlist} onChange={(event) => getPlaylist(event)}>
         {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
       </select>
@@ -227,6 +253,7 @@ function App() {
       <audio 
       ref={player}
       onTimeUpdate={() => handleTimeUpdate()}
+      onLoadedMetadata={() => handleLoadedMetaData()}
       onEnded={() => getNextSong()} 
       />
     </div>
