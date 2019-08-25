@@ -4,10 +4,9 @@ function ProgressBar({progressPercent, mouseDown, trackBarRef, pointRef}) {
 
   const track = {
     position: 'relative',
-    width: '50%',
+    width: '100%',
     height: '10px',
     background: '#7f6157',
-    margin: '20px'
   }
 
   const progress = {

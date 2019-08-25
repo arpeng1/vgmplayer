@@ -13,7 +13,7 @@ function App() {
   const dragging = useRef();
 
   const [songs, setSongs] = useState([]);
-  const [currentTrackMoment, setCurrentTrackMoment] = useState('00:00');
+  const [currentTrackMoment, setCurrentTrackMoment] = useState(0);
   const [currentTrackDuration, setCurrentTrackDuration] = useState('00:00');
   const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
@@ -26,7 +26,7 @@ function App() {
   // on initial load, grabs playlists
   useEffect((() => {
     AersiaServices
-      .getPlaylist('VIP')
+      .getPlaylist('mellow')
       .then(playlist => {
         if (!playlist || parser.validate(playlist)) {
           const jsonObj = parser.parse(playlist);
@@ -122,7 +122,7 @@ function App() {
   }
 
   function handleLoadedMetaData() {
-    setCurrentTrackDuration(handleSecondsToMinutes(Math.floor(player.current.duration)));
+    setCurrentTrackDuration(Math.floor(player.current.duration));
   }
 
   function getPreviousSong() {
@@ -150,9 +150,11 @@ function App() {
   }
 
   function handleSecondsToMinutes(sec) {
-    if (sec === 0 || sec === null) return '00:00'
-    const minutes = Math.floor(sec / 60);
-    const seconds = sec - minutes * 60;
+    if (sec === 0 || isNaN(sec)) return '00:00'
+    let minutes = Math.floor(sec / 60) + '';
+    let seconds = sec - minutes * 60 + ''; 
+    minutes = minutes.length === 1 ? '0' + minutes : minutes;
+    seconds = seconds.length === 1 ? '0' + seconds : seconds;
     return `${minutes}:${seconds}`;
   }
 
@@ -204,6 +206,62 @@ function App() {
     window.addEventListener('mouseup', handleMouseUp);
   }
 
+  function controlPlayer() {
+    const playerStyle = {
+      position: 'fixed',
+      paddingBottom: '10px',
+      bottom: '0',
+      width: '100%',
+      backgroundColor: 'white'
+    }
+    
+    const controlStyle = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+
+    const progressStyle = {
+      display: 'flex',
+      alignItems: 'center',
+    }
+
+    const timeStyle = {
+      margin: '0 1rem'
+    }
+
+    return (
+      <div style={playerStyle}>
+        <div style={progressStyle}>
+          <p style={timeStyle}>{handleSecondsToMinutes(currentTrackMoment)}</p>
+          <ProgressBar 
+            progressPercent={progressBarWidth} 
+            trackBarRef={trackBar} 
+            pointRef={point} 
+            mouseDown={handleMouseDown}
+          />
+          <p style={timeStyle}>{handleSecondsToMinutes(currentTrackDuration - currentTrackMoment)}</p>
+        </div>
+        <div style={controlStyle}>
+          {shuffle ? 
+            <ControlButton msg='linear' click={handleShuffle} /> :
+            <ControlButton msg='shuffle' click={handleShuffle} />
+          }
+          <ControlButton msg='prev' click={getPreviousSong} />
+          {play ? 
+            <ControlButton msg='pause' click={handlePlayPause} /> :
+            <ControlButton msg='play' click={handlePlayPause} /> 
+          }
+          <ControlButton msg='next' click={getNextSong}/>
+          <ControlButton msg='volume' click={handleVolume} />
+          <select value={playlist} onChange={(event) => getPlaylist(event)}>
+            {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
+          </select>
+        </div>
+      </div>
+    )
+  }
+
   if (songs.length === 0) {
     return (
       <div>
@@ -214,41 +272,7 @@ function App() {
 
   return (
     <div>
-      <p>playlist selected {playlist}</p>
-      <p>Shuffle: {shuffle}</p>
-      <p>Previous Songs: {previousSongs.map(s => s.title)}</p>
-      {selectedSong ? 
-      <p>Song selected: {selectedSong.title}</p> :
-      <p>No song selected</p>
-      }
-      {/* {play ? <p>Playing song: {selectedSong}</p> : <p>Paused</p>}  */}
-      {play ? 
-        <ControlButton msg='pause' click={handlePlayPause} /> :
-        <ControlButton msg='play' click={handlePlayPause} /> 
-      }
-      <ControlButton msg='prev' click={getPreviousSong} />
-      <ControlButton msg='next' click={getNextSong}/>
-      {shuffle ? 
-        <ControlButton msg='linear' click={handleShuffle} /> :
-        <ControlButton msg='shuffle' click={handleShuffle} />
-      }
-      <ControlButton msg='volume' click={handleVolume} />
-      {/* <p>
-      {player.current && player.current.currentTime ? handleSecondsToMinutes(Math.floor(player.current.currentTime)) : '00:00'}
-      </p> */}
-      <p>{currentTrackMoment}</p>
-      <ProgressBar 
-        progressPercent={progressBarWidth} 
-        trackBarRef={trackBar} 
-        pointRef={point} 
-        mouseDown={handleMouseDown}
-        />
-        <p>{currentTrackDuration}</p>
-        {/* <p>{player.current && player.current.duration ? handleSecondsToMinutes(Math.floor(player.current.duration - player.current.currentTime)) : '00:00'}</p> */}
-
-      <select value={playlist} onChange={(event) => getPlaylist(event)}>
-        {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
-      </select>
+      
       <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong}/>
       <audio 
       ref={player}
@@ -256,6 +280,7 @@ function App() {
       onLoadedMetadata={() => handleLoadedMetaData()}
       onEnded={() => getNextSong()} 
       />
+      {controlPlayer()}
     </div>
   );
 }
