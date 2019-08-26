@@ -163,6 +163,19 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       margin: '0 1rem'
     }
 
+    const testStyle = {
+      display: 'grid',
+      gridTemplateColumns: '30% auto 30%'
+    }
+
+    const selectedSongStyle = {
+      margin: '0 1rem'
+    }
+    const playlistsStyle = {
+      textAlign: 'right',
+      margin: '0 1rem'
+    }
+
     return (
       <div style={playerStyle}>
         <div style={progressStyle}>
@@ -175,19 +188,23 @@ function PlayerControls({songs, selectSong, selectedSong}) {
           />
           <p style={timeStyle}>{handleSecondsToMinutes(currentTrackDuration - currentTrackMoment)}</p>
         </div>
-        <div style={controlStyle}>
-          {shuffle ? 
-            <ControlButton msg='linear' click={handleShuffle} /> :
-            <ControlButton msg='shuffle' click={handleShuffle} />
-          }
-          <ControlButton msg='prev' click={handlePreviousSong} />
-          {play ? 
-            <ControlButton msg='pause' click={handlePlay} /> :
-            <ControlButton msg='play' click={handlePlay} /> 
-          }
-          <ControlButton msg='next' click={handleNextSong}/>
-          <ControlButton msg='volume' click={handleVolume} />
-          
+        <div style={testStyle}>
+          <div style={selectedSongStyle}>
+            {selectedSong ? `${selectedSong.title}` : ''}
+          </div>
+          <div style={controlStyle}>
+            {shuffle ? 
+              <ControlButton msg='linear' click={handleShuffle} /> :
+              <ControlButton msg='shuffle' click={handleShuffle} />
+            }
+            <ControlButton msg='prev' click={handlePreviousSong} />
+            {play ? 
+              <ControlButton msg='pause' click={handlePlay} /> :
+              <ControlButton msg='play' click={handlePlay} /> 
+            }
+            <ControlButton msg='next' click={handleNextSong}/>
+            <ControlButton msg='volume' click={handleVolume} />
+          </div>
         </div>
       </div>
     )

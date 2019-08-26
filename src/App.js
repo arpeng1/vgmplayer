@@ -72,11 +72,31 @@ function App() {
     )
   }
 
+  function header() {
+    const headerStyle = {
+      // position: 'fixed',
+      // top: '0',
+      width: '100%',
+      backgroundColor: 'white',
+      display: 'flex',
+      justifyContent: 'flex-end'
+    }
+    const itemsStyle = {
+      margin: '0.5rem 1rem'
+    }
+
+    return (
+      <div style={headerStyle}>
+        <select value={playlist} onChange={(event) => getPlaylist(event)} style={itemsStyle}>
+          {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
+        </select>
+      </div>
+    )
+  }
+
   return (
     <div>
-      <select value={playlist} onChange={(event) => getPlaylist(event)}>
-        {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
-      </select>
+      {header()}
       <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong}/>
       <PlayerControls songs={songs} selectSong={selectSong} selectedSong={selectedSong} />
     </div>
