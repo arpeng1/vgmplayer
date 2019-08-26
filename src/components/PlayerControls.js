@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef} from 'react';
 import ControlButton from './ControlButton';
 import ProgressBar from './ProgressBar';
 
-
 function PlayerControls({songs, selectSong, selectedSong}) {
 
   const player = useRef();
@@ -17,6 +16,8 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   const [play, setPlay] = useState(false);
   const [shuffle, setShuffle] = useState(true);
   const [previousSongs, setPreviousSongs] = useState([]);
+  const [volume, setVolume] = useState(100);
+  const [showVolume, setShowVolume] = useState(false);
 
   useEffect(() => {
     setCurrentTrackMoment(0);
@@ -87,8 +88,9 @@ function PlayerControls({songs, selectSong, selectedSong}) {
     setShuffle(!shuffle);
   }
 
-  function handleVolume() {
-    
+  function handleVolume(e) {
+    setVolume(e.target.value);
+    player.current.volume = e.target.value / 100;
   }
 
   function handleSecondsToMinutes(sec) {
@@ -151,7 +153,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
     const controlStyle = {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'space-evenly'
     }
 
     const progressStyle = {
@@ -165,15 +167,15 @@ function PlayerControls({songs, selectSong, selectedSong}) {
 
     const testStyle = {
       display: 'grid',
-      gridTemplateColumns: '30% auto 30%'
+      gridTemplateColumns: '40% auto 40%'
     }
 
     const selectedSongStyle = {
       margin: '0 1rem'
     }
-    const playlistsStyle = {
-      textAlign: 'right',
-      margin: '0 1rem'
+
+    const volumeStyle = {
+      width: '100%'
     }
 
     return (
@@ -194,16 +196,23 @@ function PlayerControls({songs, selectSong, selectedSong}) {
           </div>
           <div style={controlStyle}>
             {shuffle ? 
-              <ControlButton msg='linear' click={handleShuffle} /> :
-              <ControlButton msg='shuffle' click={handleShuffle} />
+              <ControlButton img='shuffle' click={handleShuffle} /> :
+              <ControlButton img='shuffle' click={handleShuffle} />
             }
-            <ControlButton msg='prev' click={handlePreviousSong} />
+            <ControlButton img='skip_previous' click={handlePreviousSong} />
             {play ? 
-              <ControlButton msg='pause' click={handlePlay} /> :
-              <ControlButton msg='play' click={handlePlay} /> 
+              <ControlButton img='pause_circle_outline' click={handlePlay} /> :
+              <ControlButton img='play_circle_outline' click={handlePlay} /> 
             }
-            <ControlButton msg='next' click={handleNextSong}/>
-            <ControlButton msg='volume' click={handleVolume} />
+            <ControlButton img='skip_next' click={handleNextSong}/>
+            <ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} />
+          </div>
+          <div>
+            {showVolume ? 
+              <div style={volumeStyle}>
+                <input type='range' min='0' max='100' value={volume} onChange={(e) => handleVolume(e)}/>
+              </div>
+            : null}
           </div>
         </div>
       </div>

@@ -1,9 +1,9 @@
 import React from 'react';
 
-function ControlButton({msg, click}) {
+function ControlButton({img, click}) {
   return (
     <div>
-      <button onClick={() => click()}>{msg}</button>
+      <i class='material-icons' onClick={() => click()} style={{cursor:'pointer'}}>{img}</i>
     </div>
   )
 }
