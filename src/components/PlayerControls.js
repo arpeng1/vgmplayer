@@ -201,7 +201,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
           </div>
           <div style={controlStyle}>
             {shuffle ? 
-              <ControlButton img='shuffle' click={handleShuffle} /> :
+              <ControlButton img='shuffle' click={handleShuffle} color={'#FF9148'} /> :
               <ControlButton img='shuffle' click={handleShuffle} />
             }
             <ControlButton img='skip_previous' click={handlePreviousSong} />

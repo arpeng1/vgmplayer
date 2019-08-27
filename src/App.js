@@ -7,7 +7,7 @@ const parser = require('fast-xml-parser');
 
 function App() {
   const [songs, setSongs] = useState([]);
-  const [playlist, setPlaylist] = useState('VIP');
+  const [playlist, setPlaylist] = useState('mellow');
   const [selectedSong, setSelectedSong] = useState(null);
 
   useEffect((() => {
@@ -50,7 +50,7 @@ function App() {
     const trackArrays = [];
     tracks.forEach(track => {
       let id = `${track.title}-${track.creator}`;
-      if (!songMap.has(id) || track.creator !== 'All Tracks' || track.creator !== 'I have spoken with God') {
+      if (!songMap.has(id) && track.creator !== 'All Tracks' && track.creator !== 'I have spoken with God') {
         songMap.set(id, track);
         trackArrays.push(track);
       }
