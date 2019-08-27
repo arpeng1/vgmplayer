@@ -98,7 +98,7 @@ function App() {
   return (
     <div>
       {header()}
-      <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong}/>
+      <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong} />
       <PlayerControls songs={songs} selectSong={selectSong} selectedSong={selectedSong} />
     </div>
   );

@@ -15,6 +15,10 @@ function SongTable({songs, selectSong, selectedSong = false}) {
     'rowClicked': true
   })
 
+  const tableStyle= {
+    paddingBottom: '60px'
+  }
+
   const rows = songs.map((song) => {
     const id = `${song.creator}-${song.title}`;
     return <SongRow 
@@ -29,7 +33,7 @@ function SongTable({songs, selectSong, selectedSong = false}) {
     //           selectSong={selectSong}/>
   })
   return (
-    <table>
+    <table style={tableStyle}>
       <tbody>
         {rows}
       </tbody>
