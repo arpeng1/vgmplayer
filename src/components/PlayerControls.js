@@ -93,6 +93,10 @@ function PlayerControls({songs, selectSong, selectedSong}) {
     player.current.volume = e.target.value / 100;
   }
 
+  function handleError() {
+    handleNextSong();
+  }
+
   function handleSecondsToMinutes(sec) {
     if (sec === 0 || isNaN(sec)) return '00:00'
     let minutes = Math.floor(sec / 60) + '';
@@ -227,6 +231,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       onTimeUpdate={() => handleTimeUpdate()}
       onLoadedMetadata={() => handleLoadedMetaData()}
       onEnded={() => handleNextSong()} 
+      onError={() => handleError()}
       >
         Oops
       </audio>
