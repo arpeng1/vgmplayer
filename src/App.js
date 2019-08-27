@@ -10,7 +10,6 @@ function App() {
   const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
 
-  // on initial load, grabs playlists
   useEffect((() => {
     AersiaServices
       .getPlaylist(playlist)
@@ -74,8 +73,6 @@ function App() {
 
   function header() {
     const headerStyle = {
-      // position: 'fixed',
-      // top: '0',
       width: '100%',
       backgroundColor: '#262626',
       display: 'flex',
