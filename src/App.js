@@ -46,12 +46,12 @@ function App() {
 
   // ensures uniqueness, removes additional info from 
   function cleanTracklist(tracks, p) {
-    tracks = tracks.slice(REMOVE_TRACKS_FROM_PLAYLIST_POS[p]);
+    tracks = tracks.slice(REMOVE_TRACKS_FROM_PLAYLIST_POS[p][0], tracks.length-REMOVE_TRACKS_FROM_PLAYLIST_POS[p][1]);
     let songMap = new Map(); // used to ensure uniqueness
     const trackArrays = [];
     tracks.forEach(track => {
       let id = `${track.title}-${track.creator}`;
-      if (!songMap.has(id)) {
+      if (!songMap.has(id) || track.creator !== 'All Tracks' || track.creator !== 'I have spoken with God') {
         songMap.set(id, track);
         trackArrays.push(track);
       }
@@ -116,10 +116,10 @@ const PLAYLIST_OPTIONS = [
 ];
 
 const REMOVE_TRACKS_FROM_PLAYLIST_POS = {
-  VIP: 5,
-  mellow: 3,
-  source: 5,
-  exiled: 1,
-  WAP: 3,
-  CPP: 1
+  VIP: [5,1],
+  mellow: [3,2],
+  source: [5,1],
+  exiled: [1,0],
+  WAP: [3,0],
+  CPP: [1,0]
 }
