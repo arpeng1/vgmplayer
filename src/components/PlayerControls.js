@@ -29,7 +29,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   },[selectedSong])
 
   function randomSongPosition() {
-    return Math.floor(Math.random() * songs.length - 1);
+    return Math.floor(Math.random() * songs.length);
   }
 
   function handleNewSong() {
