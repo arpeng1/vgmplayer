@@ -147,7 +147,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       paddingBottom: '10px',
       bottom: '0',
       width: '100%',
-      backgroundColor: 'white'
+      backgroundColor: '#262626'
     }
     
     const controlStyle = {

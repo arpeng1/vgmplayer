@@ -7,17 +7,17 @@ const parser = require('fast-xml-parser');
 
 function App() {
   const [songs, setSongs] = useState([]);
-  const [playlist, setPlaylist] = useState('mellow');
+  const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
 
   // on initial load, grabs playlists
   useEffect((() => {
     AersiaServices
-      .getPlaylist('mellow')
-      .then(playlist => {
-        if (!playlist || parser.validate(playlist)) {
-          const jsonObj = parser.parse(playlist);
-          const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track);
+      .getPlaylist(playlist)
+      .then(trackList => {
+        if (!trackList || parser.validate(trackList)) {
+          const jsonObj = parser.parse(trackList);
+          const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track, playlist);
           setSongs(cleanSongs);
         } else {
           console.log('error, invalid playlist xml format', playlist);;
@@ -35,7 +35,7 @@ function App() {
       const response = await AersiaServices.getPlaylist(name);
       if (!response || parser.validate(response)) {
         const jsonObj = parser.parse(response);
-        setSongs(cleanTracklist(jsonObj.playlist.trackList.track));
+        setSongs(cleanTracklist(jsonObj.playlist.trackList.track, name));
       } else {
         throw new Error('invalid playlist xml format');
       }
@@ -45,8 +45,8 @@ function App() {
   }
 
   // ensures uniqueness, removes additional info from 
-  function cleanTracklist(tracks) {
-    tracks = tracks.slice(REMOVE_TRACKS_FROM_PLAYLIST_POS[playlist]);
+  function cleanTracklist(tracks, p) {
+    tracks = tracks.slice(REMOVE_TRACKS_FROM_PLAYLIST_POS[p]);
     let songMap = new Map(); // used to ensure uniqueness
     const trackArrays = [];
     tracks.forEach(track => {
@@ -77,9 +77,9 @@ function App() {
       // position: 'fixed',
       // top: '0',
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: '#262626',
       display: 'flex',
-      justifyContent: 'flex-end'
+      justifyContent: 'space-between'
     }
     const itemsStyle = {
       margin: '0.5rem 1rem'
@@ -87,6 +87,7 @@ function App() {
 
     return (
       <div style={headerStyle}>
+        <p>Video Game Music Player</p>
         <select value={playlist} onChange={(event) => getPlaylist(event)} style={itemsStyle}>
           {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
         </select>

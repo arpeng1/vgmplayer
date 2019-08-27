@@ -26,7 +26,7 @@ function ProgressBar({progressPercent, mouseDown, trackBarRef, pointRef}) {
     bottom: '10px',
     height: '12px',
     width: '12px',
-    background: 'black',
+    background: 'white',
     transform: `translate(-50%, -50%)`
   }
 
