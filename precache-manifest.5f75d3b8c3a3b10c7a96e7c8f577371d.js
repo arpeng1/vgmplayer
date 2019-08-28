@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2ec862b255312baff2984ce329f18895",
+    "revision": "5b8191096baf7d412247472382ac36a7",
     "url": "/vgmplayer/index.html"
   },
   {
-    "revision": "8af0ee4137bf3d0a6658",
+    "revision": "32c278cbe98c59d4ad25",
     "url": "/vgmplayer/static/css/main.4568f3a2.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vgmplayer/static/js/2.0ff2b1ea.chunk.js"
   },
   {
-    "revision": "8af0ee4137bf3d0a6658",
-    "url": "/vgmplayer/static/js/main.1d5ce772.chunk.js"
+    "revision": "32c278cbe98c59d4ad25",
+    "url": "/vgmplayer/static/js/main.790bbe30.chunk.js"
   },
   {
     "revision": "6a1b30339fd453b96855",
