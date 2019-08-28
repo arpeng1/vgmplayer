@@ -1,8 +1,13 @@
 import React from 'react';
 
 function SongRow({song, index, selectSong, className}) {
+  const rowStyle = {
+    cursor: 'pointer'
+  }
+
   return (
-    <tr 
+    <tr
+      style={rowStyle}
       onClick={() => selectSong(song)} 
       className={className}
       >
