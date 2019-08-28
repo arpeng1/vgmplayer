@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "36cf5b71f7227ee8c8639d2bae8726bf",
+    "revision": "2ec862b255312baff2984ce329f18895",
     "url": "/vgmplayer/index.html"
   },
   {
