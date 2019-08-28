@@ -29,7 +29,8 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   },[selectedSong])
 
   function randomSongPosition() {
-    return Math.floor(Math.random() * songs.length);
+    // songs.length - 1 as current song playing is removed from list
+    return Math.floor(Math.random() * songs.length - 1);
   }
 
   function handleNewSong() {
@@ -77,9 +78,11 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handleNextSong() {
+    console.log(selectedSong);
     let songPosition = shuffle ? 
       randomSongPosition() :
-      songs.findIndex(song => song === selectedSong) + 1;
+      songs.findIndex(song => song.title === selectedSong.title) + 1;
+    console.log(songPosition);
     songPosition = songPosition > songs.length - 1 ? 0 : songPosition;
     const nextSong = Object.assign({}, songs[songPosition]);
     selectSong(nextSong);
