@@ -77,10 +77,11 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handleNextSong() {
-    const songPosition = shuffle ? 
+    let songPosition = shuffle ? 
       randomSongPosition() :
       songs.findIndex(song => song === selectedSong) + 1;
-    const nextSong = songs[songPosition];
+    songPosition = songPosition > songs.length - 1 ? 0 : songPosition;
+    const nextSong = Object.assign({}, songs[songPosition]);
     selectSong(nextSong);
   }
 
@@ -172,7 +173,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
 
     const testStyle = {
       display: 'grid',
-      gridTemplateColumns: 'auto 20% auto'
+      gridTemplateColumns: '40% auto 40%'
     }
 
     const selectedSongStyle = {
