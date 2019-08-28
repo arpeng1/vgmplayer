@@ -9,6 +9,7 @@ function App() {
   const [songs, setSongs] = useState([]);
   const [playlist, setPlaylist] = useState('mellow');
   const [selectedSong, setSelectedSong] = useState(null);
+  const [filter, setFilter] = useState('');
 
   useEffect((() => {
     AersiaServices
@@ -63,6 +64,14 @@ function App() {
     setSelectedSong(song);
   }
 
+  function handleFilter(val) {
+    setFilter(val);
+  }
+
+  function handleFilterSongs(songs) {
+    return songs.filter(s => `${s.creator} - ${s.title}`.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
+  }
+
   if (songs.length === 0) {
     return (
       <div>
@@ -76,7 +85,8 @@ function App() {
       width: '100%',
       backgroundColor: '#262626',
       display: 'flex',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      alignItems: 'center'
     }
     const itemsStyle = {
       margin: '0.5rem 1rem'
@@ -84,10 +94,15 @@ function App() {
 
     return (
       <div style={headerStyle}>
-        <p>Video Game Music Player</p>
-        <select value={playlist} onChange={(event) => getPlaylist(event)} style={itemsStyle}>
-          {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
-        </select>
+        <div>
+          <p>Video Game Music Player</p>
+        </div>
+        <div>
+          <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>
+          <select value={playlist} onChange={(event) => getPlaylist(event)} style={itemsStyle}>
+            {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
+          </select>
+        </div>
       </div>
     )
   }
@@ -95,8 +110,14 @@ function App() {
   return (
     <div>
       {header()}
-      <SongTable songs={songs} selectSong={selectSong} selectedSong={selectedSong} />
-      <PlayerControls songs={songs} selectSong={selectSong} selectedSong={selectedSong} />
+      <SongTable songs={handleFilterSongs(songs)} 
+        selectSong={selectSong} 
+        selectedSong={selectedSong} 
+      />
+      <PlayerControls songs={handleFilterSongs(songs)}
+        selectSong={selectSong} 
+        selectedSong={selectedSong} 
+      />
     </div>
   );
 }

@@ -172,7 +172,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
 
     const testStyle = {
       display: 'grid',
-      gridTemplateColumns: '40% auto 40%'
+      gridTemplateColumns: 'auto 20% auto'
     }
 
     const selectedSongStyle = {
