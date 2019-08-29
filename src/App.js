@@ -91,8 +91,8 @@ function App() {
       alignItems: 'center'
     }
     const titleStyle = {
-      display: (window.innerWidth < 800 && window.innerHeight < 600) ? 'none' : null,
-      margin: '0 1rem' 
+      display: (window.innerWidth <= 812 && window.innerHeight <= 812) ? 'none' : null,
+      margin: '0 1rem',
     }
     const itemsStyle = {
       margin: '0.5rem 1rem'
@@ -102,7 +102,10 @@ function App() {
       <div style={headerStyle}>
         <div>
           {/* <p>Video Game Music Player</p> */}
-          <p style={titleStyle}>VGM</p>
+          <div style={titleStyle}>
+            <div>VGM</div>
+            <div style={{fontSize: '0.50rem'}}>playlists by Cats777</div>
+          </div>
         </div>
         <div>
           <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>
