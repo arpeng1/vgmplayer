@@ -4,7 +4,8 @@ import SongRow from './SongRow';
 function SongTable({songs, selectSong, selectedSong = false}) {
 
   const tableStyle= {
-    paddingBottom: '60px'
+    paddingBottom: '60px',
+    paddingTop: '53px'
   }
 
   const rows = songs.map((song) => {

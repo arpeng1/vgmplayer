@@ -82,7 +82,9 @@ function App() {
 
   function header() {
     const headerStyle = {
+      position: 'fixed',
       width: '100%',
+      height: '53px',
       backgroundColor: '#262626',
       display: 'flex',
       justifyContent: 'space-between',
@@ -95,7 +97,8 @@ function App() {
     return (
       <div style={headerStyle}>
         <div>
-          <p>Video Game Music Player</p>
+          {/* <p>Video Game Music Player</p> */}
+          <p>VGM</p>
         </div>
         <div>
           <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>
