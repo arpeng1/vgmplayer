@@ -16,8 +16,8 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   const [play, setPlay] = useState(false);
   const [shuffle, setShuffle] = useState(true);
   const [previousSongs, setPreviousSongs] = useState([]);
-  const [volume, setVolume] = useState(100);
-  const [showVolume, setShowVolume] = useState(false);
+  // const [volume, setVolume] = useState(100);
+  // const [showVolume, setShowVolume] = useState(false);
 
   useEffect(() => {
     setCurrentTrackMoment(0);
@@ -97,10 +97,10 @@ function PlayerControls({songs, selectSong, selectedSong}) {
     setShuffle(!shuffle);
   }
 
-  function handleVolume(e) {
-    setVolume(e.target.value);
-    player.current.volume = e.target.value / 100;
-  }
+  // function handleVolume(e) {
+  //   setVolume(e.target.value);
+  //   player.current.volume = e.target.value / 100;
+  // }
 
   function handleError() {
     handleNextSong();
@@ -191,9 +191,9 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       margin: '0 1rem'
     }
 
-    const volumeStyle = {
-      width: '100%'
-    }
+    // const volumeStyle = {
+    //   width: '100%'
+    // }
 
     return (
       <div style={playerStyle}>
@@ -225,11 +225,11 @@ function PlayerControls({songs, selectSong, selectedSong}) {
             {/* <ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} /> */}
           </div>
           <div>
-            {showVolume ? 
+            {/* {showVolume ? 
               <div style={volumeStyle}>
                 <input type='range' min='0' max='100' value={volume} onChange={(e) => handleVolume(e)}/>
               </div>
-            : null}
+            : null} */}
           </div>
         </div>
       </div>

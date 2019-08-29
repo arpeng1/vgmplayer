@@ -90,6 +90,10 @@ function App() {
       justifyContent: 'space-between',
       alignItems: 'center'
     }
+    const titleStyle = {
+      display: (window.innerWidth < 800 && window.innerHeight < 600) ? 'none' : null,
+      margin: '0 1rem' 
+    }
     const itemsStyle = {
       margin: '0.5rem 1rem'
     }
@@ -98,7 +102,7 @@ function App() {
       <div style={headerStyle}>
         <div>
           {/* <p>Video Game Music Player</p> */}
-          <p style={{display: window.innerWidth < 800 && window.innerHeight < 600 ? 'none' : null}}>VGM</p>
+          <p style={titleStyle}>VGM</p>
         </div>
         <div>
           <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>
