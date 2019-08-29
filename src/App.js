@@ -98,7 +98,7 @@ function App() {
       <div style={headerStyle}>
         <div>
           {/* <p>Video Game Music Player</p> */}
-          <p>VGM</p>
+          <p style={{display: window.innerWidth < 800 && window.innerHeight < 600 ? 'none' : null}}>VGM</p>
         </div>
         <div>
           <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>

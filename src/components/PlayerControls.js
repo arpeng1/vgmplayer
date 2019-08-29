@@ -155,6 +155,8 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function controlPlayer() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     const playerStyle = {
       position: 'fixed',
       paddingBottom: '10px',
@@ -164,7 +166,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       backgroundColor: '#262626'
     }
     
-    const controlStyle = {
+    const buttonStyle = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-evenly'
@@ -179,12 +181,13 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       margin: '0 1rem'
     }
 
-    const testStyle = {
-      display: 'grid',
+    const controlStyle = {
+      display: (isMobile) ? null : 'grid',
       gridTemplateColumns: '40% auto 40%'
     }
 
     const selectedSongStyle = {
+      display: (isMobile) ? 'none' : null,
       margin: '0 1rem'
     }
 
@@ -204,22 +207,22 @@ function PlayerControls({songs, selectSong, selectedSong}) {
           />
           <p style={timeStyle}>{handleSecondsToMinutes(currentTrackDuration - currentTrackMoment)}</p>
         </div>
-        <div style={testStyle}>
+        <div style={controlStyle}>
           <div style={selectedSongStyle}>
             {selectedSong ? `${selectedSong.title}` : ''}
           </div>
-          <div style={controlStyle}>
+          <div style={buttonStyle}>
             {shuffle ? 
               <ControlButton img='shuffle' click={handleShuffle} color={'#FF9148'} /> :
               <ControlButton img='shuffle' click={handleShuffle} />
             }
-            <ControlButton img='skip_previous' click={handlePreviousSong} />
             {play ? 
               <ControlButton img='pause_circle_outline' click={handlePlay} /> :
               <ControlButton img='play_circle_outline' click={handlePlay} /> 
             }
+            <ControlButton img='skip_previous' click={handlePreviousSong} />
             <ControlButton img='skip_next' click={handleNextSong}/>
-            <ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} />
+            {/* <ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} /> */}
           </div>
           <div>
             {showVolume ? 
