@@ -7,7 +7,7 @@ const parser = require('fast-xml-parser');
 
 function App() {
   const [songs, setSongs] = useState([]);
-  const [playlist, setPlaylist] = useState('mellow');
+  const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
   const [filter, setFilter] = useState('');
 
@@ -91,7 +91,7 @@ function App() {
       alignItems: 'center'
     }
     const titleStyle = {
-      display: (window.innerWidth <= 812 && window.innerHeight <= 812) ? 'none' : null,
+      display: (window.innerWidth <= 400) ? 'none' : null,
       margin: '0 1rem',
     }
     const itemsStyle = {

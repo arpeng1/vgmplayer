@@ -16,8 +16,8 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   const [play, setPlay] = useState(false);
   const [shuffle, setShuffle] = useState(true);
   const [previousSongs, setPreviousSongs] = useState([]);
-  // const [volume, setVolume] = useState(100);
-  // const [showVolume, setShowVolume] = useState(false);
+  const [volume, setVolume] = useState(100);
+  const [showVolume, setShowVolume] = useState(false);
 
   useEffect(() => {
     setCurrentTrackMoment(0);
@@ -27,6 +27,17 @@ function PlayerControls({songs, selectSong, selectedSong}) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[selectedSong])
+
+  // useEffect((e) => {
+  //   function handleKeyPress(e) {
+  //     if (e.keyCode === 80) {
+  //       handlePlay();
+  //     }
+  //   }
+  //   document.addEventListener('keydown', handleKeyPress);
+  //   return () => document.removeEventListener('keydown', handleKeyPress);
+
+  // }, [play])
 
   function randomSongPosition() {
     // songs.length - 1 as current song playing is removed from list
@@ -97,10 +108,10 @@ function PlayerControls({songs, selectSong, selectedSong}) {
     setShuffle(!shuffle);
   }
 
-  // function handleVolume(e) {
-  //   setVolume(e.target.value);
-  //   player.current.volume = e.target.value / 100;
-  // }
+  function handleVolume(e) {
+    setVolume(e.target.value);
+    player.current.volume = e.target.value / 100;
+  }
 
   function handleError() {
     handleNextSong();
@@ -191,9 +202,14 @@ function PlayerControls({songs, selectSong, selectedSong}) {
       margin: '0 1rem'
     }
 
-    // const volumeStyle = {
-    //   width: '100%'
-    // }
+    const volumeStyle = {
+      // display: (isMobile) ? 'none' : null,
+      width: '100%'
+    }
+
+    const volumeButtonStyle = {
+      display: (isMobile) ? 'none' : null
+    }
 
     return (
       <div style={playerStyle}>
@@ -222,14 +238,14 @@ function PlayerControls({songs, selectSong, selectedSong}) {
             }
             <ControlButton img='skip_previous' click={handlePreviousSong} />
             <ControlButton img='skip_next' click={handleNextSong}/>
-            {/* <ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} /> */}
+            <span style={volumeButtonStyle}><ControlButton img='volume_up' click={() => setShowVolume(!showVolume)} /></span>
           </div>
           <div>
-            {/* {showVolume ? 
+            {showVolume ? 
               <div style={volumeStyle}>
                 <input type='range' min='0' max='100' value={volume} onChange={(e) => handleVolume(e)}/>
               </div>
-            : null} */}
+            : null}
           </div>
         </div>
       </div>
