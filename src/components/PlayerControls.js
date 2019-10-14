@@ -3,7 +3,6 @@ import ControlButton from './ControlButton';
 import ProgressBar from './ProgressBar';
 
 function PlayerControls({songs, selectSong, selectedSong}) {
-
   const player = useRef();
   const trackBar = useRef();
   const point = useRef();
@@ -45,6 +44,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handleNewSong() {
+    if (songs === null || songs.length === 0) return;
     if (selectedSong) {
       setPreviousSongs(previousSongs.concat(selectedSong));
       player.current.src = selectedSong.location;
@@ -54,6 +54,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handlePlay() {
+    if (songs === null || songs.length === 0) return;
     if (selectedSong === null) {
       const songPosition = shuffle ? randomSongPosition() : 0;
       const randomSong = songs[songPosition];
@@ -81,6 +82,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handlePreviousSong() {
+    if (songs === null || songs.length === 0) return;
     if (previousSongs.length > 1) {
       const song = previousSongs[previousSongs.length - 2];
       setPreviousSongs(previousSongs.slice(0, previousSongs.length - 2));
@@ -89,6 +91,7 @@ function PlayerControls({songs, selectSong, selectedSong}) {
   }
 
   function handleNextSong() {
+    if (songs === null || songs.length === 0) return;
     let indexOfSelectedSong = songs.findIndex(song => song.title === selectedSong.title);
     let songPosition = 0;
     let nextSong = null;

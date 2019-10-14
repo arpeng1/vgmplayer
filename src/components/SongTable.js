@@ -1,8 +1,7 @@
 import React from 'react';
 import SongRow from './SongRow';
 
-function SongTable({songs, selectSong, selectedSong = false}) {
-
+function SongTable({songs, selectSong, hideShowSong, selectedSong = false}) {
   const tableStyle= {
     paddingBottom: '60px',
     paddingTop: '53px'
@@ -13,7 +12,10 @@ function SongTable({songs, selectSong, selectedSong = false}) {
     return <SongRow 
               song={song}
               key={id} 
-              selectSong={selectSong}/>
+              selectSong={selectSong}
+              hideShowSong={hideShowSong}
+              visible={song.visible}
+              />
   })
   return (
     <table style={tableStyle}>

@@ -7,6 +7,7 @@ const parser = require('fast-xml-parser');
 
 function App() {
   const [songs, setSongs] = useState([]);
+  const [visibleSongs, setVisibleSongs] = useState([]);
   const [playlist, setPlaylist] = useState('VIP');
   const [selectedSong, setSelectedSong] = useState(null);
   const [filter, setFilter] = useState('');
@@ -19,6 +20,8 @@ function App() {
           const jsonObj = parser.parse(trackList);
           const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track, playlist);
           setSongs(cleanSongs);
+          // need to get from localStorage and update visible songs
+          setVisibleSongs(cleanSongs);
         } else {
           console.log('error, invalid playlist xml format', playlist);;
           throw new Error('invalid playlist');
@@ -35,7 +38,10 @@ function App() {
       const response = await AersiaServices.getPlaylist(name);
       if (!response || parser.validate(response)) {
         const jsonObj = parser.parse(response);
-        setSongs(cleanTracklist(jsonObj.playlist.trackList.track, name));
+        const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track, name);
+        setSongs(cleanSongs);
+        // need to get from localStorage and update visible songs
+        setVisibleSongs(cleanSongs);
       } else {
         throw new Error('invalid playlist xml format');
       }
@@ -70,6 +76,19 @@ function App() {
 
   function handleFilterSongs(songs) {
     return songs.filter(s => `${s.creator} - ${s.title}`.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
+  }
+
+  function hideShowSong(song) {
+    const indx = songs.findIndex(s => s.title === song.title);
+    const updatedSong = {...song, visible: !song.visible};
+    const updatedSongArray = songs.slice(0, indx).concat(updatedSong, songs.slice(indx + 1));
+    // console.log(song, updatedSongArray);
+    if (!song.visible) {
+      setVisibleSongs(visibleSongs.filter(s => s.title !== song.title));
+    } else {
+      setVisibleSongs(visibleSongs.concat(song));
+    }
+    setSongs(updatedSongArray);
   }
 
   if (songs.length === 0) {
@@ -123,8 +142,9 @@ function App() {
       <SongTable songs={handleFilterSongs(songs)} 
         selectSong={selectSong} 
         selectedSong={selectedSong} 
+        hideShowSong={hideShowSong}
       />
-      <PlayerControls songs={handleFilterSongs(songs)}
+      <PlayerControls songs={handleFilterSongs(visibleSongs)}
         selectSong={selectSong} 
         selectedSong={selectedSong} 
       />
