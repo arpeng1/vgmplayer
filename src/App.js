@@ -120,7 +120,7 @@ function App() {
     const updatedSong = {...song, visible: !song.visible};
     const updatedSongArray = songs.slice(0, indx).concat(updatedSong, songs.slice(indx + 1));
     let hiddenObj = JSON.parse(localStorage.hidden);
-    if (!song.visible) {
+    if (song.visible) {
       setVisibleSongs(visibleSongs.filter(s => s.title !== song.title));
       hiddenObj[playlist][`${song.title}`] = true; 
     } else {
