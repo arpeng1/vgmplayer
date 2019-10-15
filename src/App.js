@@ -20,8 +20,8 @@ function App() {
           const jsonObj = parser.parse(trackList);
           const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track, playlist);
           setSongs(cleanSongs);
-          // need to get from localStorage and update visible songs
-          setVisibleSongs(cleanSongs);
+          const visibleSongs = hideSongsInTracklist(cleanSongs);
+          setVisibleSongs(visibleSongs);
         } else {
           console.log('error, invalid playlist xml format', playlist);;
           throw new Error('invalid playlist');
@@ -29,6 +29,24 @@ function App() {
       })    
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }), []);
+
+  useEffect(() => {
+    if (typeof(Storage)) {
+      if (!localStorage.hidden) {
+        const hiddenObj = {
+          VIP: {},
+          mellow: {},
+          source: {},
+          exiled: {},
+          WAP: {},
+          CPP: {}
+        }
+        localStorage.setItem('hidden', JSON.stringify(hiddenObj));
+      }
+    } else {
+      alert('Restricting song selection incompatible with your browser.')
+    }
+  }, []);
 
   async function getPlaylist (event) {
     event.preventDefault();
@@ -40,8 +58,8 @@ function App() {
         const jsonObj = parser.parse(response);
         const cleanSongs = cleanTracklist(jsonObj.playlist.trackList.track, name);
         setSongs(cleanSongs);
-        // need to get from localStorage and update visible songs
-        setVisibleSongs(cleanSongs);
+        const visibleSongs = hideSongsInTracklist(cleanSongs);
+        setVisibleSongs(visibleSongs);
       } else {
         throw new Error('invalid playlist xml format');
       }
@@ -65,6 +83,20 @@ function App() {
     songMap = null;
     return trackArrays;
   }
+
+  function hideSongsInTracklist(tracks) {
+    const trackArrays = [];
+    const hiddenObj = JSON.parse(localStorage.hidden);
+    tracks.forEach(track => {
+      if (hiddenObj[playlist][`${track.title}`]) {
+        track.visible = true;
+      } else {
+        track.visible = false;
+      }
+      trackArrays.push(track);
+    })
+    return trackArrays;
+  }
   
   function selectSong(song) {
     setSelectedSong(song);
@@ -82,12 +114,15 @@ function App() {
     const indx = songs.findIndex(s => s.title === song.title);
     const updatedSong = {...song, visible: !song.visible};
     const updatedSongArray = songs.slice(0, indx).concat(updatedSong, songs.slice(indx + 1));
-    // console.log(song, updatedSongArray);
+    let hiddenObj = JSON.parse(localStorage.hidden);
     if (!song.visible) {
       setVisibleSongs(visibleSongs.filter(s => s.title !== song.title));
+      hiddenObj[playlist][`${song.title}`] = true; 
     } else {
       setVisibleSongs(visibleSongs.concat(song));
+      delete hiddenObj[playlist][`${song.title}`];
     }
+    localStorage.setItem('hidden', JSON.stringify(hiddenObj));
     setSongs(updatedSongArray);
   }
 
