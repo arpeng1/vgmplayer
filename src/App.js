@@ -157,6 +157,10 @@ function App() {
       margin: '0.5rem 1rem'
     }
 
+    function showAdditionalInfo() {
+      alert("+/x shows/hides songs from playing.\n Type 'hidden' to filter by hidden songs.")
+    }
+
     return (
       <div style={headerStyle}>
         <div>
@@ -166,7 +170,8 @@ function App() {
             <div style={{fontSize: '0.50rem'}}>playlists by Cats777</div>
           </div>
         </div>
-        <div>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <i className='material-icons' style={{margin: '0 0.5rem', cursor: 'pointer'}} onClick={() => showAdditionalInfo()}>help_outline</i>
           <input value={filter} placeholder='Search...' onChange={(e) => handleFilter(e.target.value)}/>
           <select value={playlist} onChange={(event) => getPlaylist(event)} style={itemsStyle}>
             {PLAYLIST_OPTIONS.map(playlist => <option value={playlist} key={playlist}>{playlist}</option>)}
