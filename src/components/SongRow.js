@@ -15,7 +15,7 @@ function SongRow({song, index, selectSong, hideShowSong, className, visible}) {
     paddingBottom: '0',
     marginTop: '4px'
   }
-  const textStyle = {
+  const hiddenTextStyle = {
     textDecoration: 'line-through'
   }
 
@@ -29,19 +29,10 @@ function SongRow({song, index, selectSong, hideShowSong, className, visible}) {
           <i className='material-icons' style={hiddenStyle}>add</i>
         </td>
       }
-      <td onClick={() => selectSong(song)} style={visible ? textStyle : null}>
+      <td onClick={() => selectSong(song)} style={visible ? null : hiddenTextStyle}>
         {index} {song.creator} - {song.title}
       </td>
     </tr>
-    // <tr
-    //   style={rowStyle}
-    //   onClick={() => selectSong(song)} 
-    //   className={className}
-    //   >
-    //   <td>
-    //     {index} {song.creator} - {song.title}
-    //   </td>
-    // </tr>
   )
 
 }

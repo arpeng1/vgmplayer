@@ -89,9 +89,9 @@ function App() {
     const hiddenObj = JSON.parse(localStorage.hidden);
     tracks.forEach(track => {
       if (hiddenObj[playlist][`${track.title}`]) {
-        track.visible = true;
-      } else {
         track.visible = false;
+      } else {
+        track.visible = true;
       }
       trackArrays.push(track);
     })
