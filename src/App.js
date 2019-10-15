@@ -107,7 +107,12 @@ function App() {
   }
 
   function handleFilterSongs(songs) {
-    return songs.filter(s => `${s.creator} - ${s.title}`.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
+    if (filter === 'hidden') {
+      let hiddenObj = JSON.parse(localStorage.hidden);
+      return songs.filter(s => hiddenObj[playlist][`${s.title}`]);
+    } else {
+      return songs.filter(s => `${s.creator} - ${s.title}`.toLowerCase().indexOf(filter.toLowerCase()) !== -1);
+    }
   }
 
   function hideShowSong(song) {
